@@ -1,11 +1,9 @@
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 
-from django.contrib import admin
 from django.urls import path
 
+from inspector.views import CarFinished
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('car-finished/<int:id>', CarFinished.as_view(), name='car-finished'),
 ]

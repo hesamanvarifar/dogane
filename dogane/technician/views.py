@@ -1,13 +1,27 @@
-from django.shortcuts import get_object_or_404, render
-
-from rest_framework.views import APIView
+from django.shortcuts import render
+from rest_framework import status
 from rest_framework.response import Response
-from core.models import  Car
+from rest_framework.views import APIView
+
+from core.models import Car
+from core.permission import IsTechnician
+from .serializer import TechnicianSerializer
 
 
-class TechnicianView(APIView):
-    def post(self,request,id):
-        car:Car = get_object_or_404(Car, id=id)
-        car.is_repaired = True
-        car.save()
-        return Response(status=200)
+class CarRepaired(APIView):
+    permission_classes = [IsTechnician]
+
+    def post(self, request, id):
+        car_obj = Car.objects.get(id=id)
+        serializer = TechnicianSerializer(data=request.data)
+        if serializer.is_valid():
+            if serializer.validated_data['is_repair'] == True:
+                car_obj.is_repair = True
+                car_obj.save()
+                return Response(status=status.HTTP_201_CREATED)
+            elif serializer.validated_data['is_repair'] == False:
+                car_obj.is_repair = False
+                car_obj.save()
+                return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors)
