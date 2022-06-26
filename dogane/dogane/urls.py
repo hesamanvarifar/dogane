@@ -15,4 +15,5 @@ urlpatterns = [
     path('', include('inspector.urls')),
     path('', include('reception.urls')),
     path('', include('technician.urls')),
+    # path('', include('technician.urls')),
 ]
